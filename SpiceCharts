@@ -1,0 +1,60 @@
+import networkx as nx
+import matplotlib.pyplot as plt
+from itertools import combinations
+from collections import defaultdict
+
+#SPICE COMBOS GO HERE
+spice_combination = [
+    ['Cumin', 'Coriander', 'Paprika', 'Salt', 'Black Pepper', 'Cayenne', 'Oregano'],
+['Garlic', 'Basil', 'Oregano', 'Salt', 'Black Pepper', 'Parsley', 'Rosmary', 'Thyme', 'Nutmeg'],
+['Cinnamon', 'Ginger', 'Nutmeg', 'All-Spice', 'Cloves'],
+['Lemon Pepper', 'Black Pepper', 'Salt'],
+['Cumin', 'Coriander', 'Tumeric', 'Cinnamon', 'Cardamom', 'Cayenne'],
+['Basil', 'Oregano', 'Thyme', 'Rosmary', 'Garlic', 'Onion', 'Salt'],
+['Chili', 'Cumin', 'Coriander', 'Garlic', 'Cayenne', 'Salt', 'Paprika', 'Smoked Paprkia'],
+['Chili', 'Cumin', 'Onion', 'Garlic', 'Cayenne', 'Black Pepper', 'Salt', 'Oregano'],
+['Mustard', 'Cumin', 'Tumeric', 'Salt', 'Coriander'],
+['Chili', 'Paprika', 'Cumin', 'Onion', 'Garlic', 'Cayenne', 'Salt', 'Pepper', 'Oregano'],
+]
+
+#co-occurances number
+co_occurances = defaultdict(int)
+
+for combo in spice_combination:
+    for pair in combinations(combo, 2):
+        co_occurances[pair] += 1
+
+#Graph TIMEEEEEE
+G = nx.Graph()
+
+#Add Edges with Weights
+for (spice1, spice2), weight in co_occurances.items():
+    G.add_edge(spice1, spice2, weight=weight)
+
+# Draw the graph
+pos = nx.spring_layout(G,k = 1/10, iterations = 100, weight = weight * 1000, seed = 42)
+#pos = nx.shell_layout(G)
+
+
+
+#Draw nodes
+nx.draw_networkx_nodes(G, pos, node_color="lightgreen", node_size=500)
+
+#Draw edge thickness according to weight
+nx.draw_networkx_edges(
+    G, pos,
+    edgelist=G.edges(),
+    width=[G[u][v]['weight'] for u, v in G.edges()]
+)
+
+# Draw labels
+nx.draw_networkx_labels(G, pos, font_size=6)
+
+# Draw edge labels (optional)
+edge_labels = {(u, v): d["weight"] for u, v, d in G.edges(data=True)}
+#nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_size=6)
+
+plt.title("Spice Co-occurrence Network")
+plt.axis("off")
+plt.tight_layout()
+plt.show()

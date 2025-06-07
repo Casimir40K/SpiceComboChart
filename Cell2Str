@@ -1,0 +1,11 @@
+raw_input = """
+
+"""
+
+# Convert to list
+spice_combo = [line.strip().title() for line in raw_input.strip().split("\n") if line.strip()]
+
+# Wrap in a list of lists to match the format used in the co-occurrence script
+spice_combos = [spice_combo]
+
+print("Formatted combination:", spice_combos)

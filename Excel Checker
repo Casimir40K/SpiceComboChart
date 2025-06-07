@@ -1,0 +1,17 @@
+import pandas as pd
+
+# Step 1: Load Excel file
+df = pd.read_excel("spice_combinations.xlsx", engine="openpyxl")
+
+# Step 2: Convert each column into a list of spices (drop NaNs)
+spice_combos = []
+for column in df.columns:
+    combo = df[column].dropna().tolist()
+    #combo.remove(1) # Remove Header
+    if combo:  # ignore empty columns
+        spice_combos.append([spice.strip().title() for spice in combo])
+
+# Output to check
+print("Formatted spice combinations:")
+for combo in spice_combos:
+    print(combo)
